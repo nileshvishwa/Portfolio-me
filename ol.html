@@ -26,7 +26,7 @@
 }
 
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
+html { scroll-behavior:auto; }
 body {
   background:#080808;
   color:var(--text);
@@ -795,8 +795,8 @@ footer p { font-size:0.78rem; color:var(--text3); }
         <div class="thumb-tags"><span class="tag">Figma</span><span class="tag">Web Design</span></div>
       </div>
       <div class="project-body">
-        <h3>Landing Page — Hero & About</h3>
-        <p>Hero + About web sections. Figma frames and interactive prototype.</p>
+        <h3>GrowthSpace</h3>
+        <p>End-to-end web design — Navbar, Hero, About, Services, Info, Footer.</p>
         <a href="https://www.figma.com/proto/YzJXRGAdGBCsVCzn4YYeoY/Landing-Page?page-id=17%3A39&node-id=28-312" target="_blank" class="project-link">View in Figma</a>
       </div>
     </div>
@@ -807,8 +807,8 @@ footer p { font-size:0.78rem; color:var(--text3); }
         <div class="thumb-tags"><span class="tag">Figma</span><span class="tag">Full Page</span></div>
       </div>
       <div class="project-body">
-        <h3>GrowthSpace</h3>
-        <p>End-to-end web design — Navbar, Hero, About, Services, Info, Footer.</p>
+        <h3>Landing Page — Hero & About</h3>
+        <p>Hero + About web sections. Figma frames and interactive prototype.</p>
         <a href="https://www.figma.com/design/p4nujKu5nca1wVjaCBg4e3/First-Project?node-id=16-151" target="_blank" class="project-link">View in Figma</a>
       </div>
     </div>
@@ -1336,6 +1336,31 @@ document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cursor
 document.querySelectorAll('a,button,.project-card,.dev-card,.tab-btn').forEach(el => {
   el.addEventListener('mouseenter', () => { ring.style.transform='translate(-50%,-50%) scale(1.8)'; ring.style.opacity='0.3'; });
   el.addEventListener('mouseleave', () => { ring.style.transform='translate(-50%,-50%) scale(1)'; ring.style.opacity='0.6'; });
+});
+
+// ── SMOOTH SCROLL ──
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    const target = document.querySelector(this.getAttribute('href'));
+    if (!target) return;
+    e.preventDefault();
+    const start = window.scrollY;
+    const end = target.getBoundingClientRect().top + window.scrollY - 70;
+    const dist = end - start;
+    const duration = Math.min(Math.abs(dist) * 0.6, 1000);
+    let startTime = null;
+    function ease(t) {
+      return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+    }
+    function step(ts) {
+      if (!startTime) startTime = ts;
+      const elapsed = ts - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      window.scrollTo(0, start + dist * ease(progress));
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
 });
 
 // ── NAV SCROLL ──
